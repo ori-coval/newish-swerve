@@ -106,6 +106,24 @@ public class Swerve extends SubsystemBase {
         }
     }
 
+    public double[] getAdvantageModuleStates(){
+        double[] states = new double[8];
+        for(int i = 0; i<4; i++){
+            states[mSwerveMods[i].moduleNumber + i] =  mSwerveMods[i].getState().angle.getDegrees();
+            states[mSwerveMods[i].moduleNumber + i + 1] =  mSwerveMods[i].getState().speedMetersPerSecond;
+        }
+        return states;
+    }
+    
+    public double[] getAdvantageDesiredModuleStates(){
+        double[] states = new double[8];
+        for(int i = 0; i<4; i++){
+            states[mSwerveMods[i].moduleNumber + i] =  mSwerveMods[i].getDesierdState().angle.getDegrees();
+            states[mSwerveMods[i].moduleNumber + i + 1] =  mSwerveMods[i].getDesierdState().speedMetersPerSecond;
+        }
+        return states;
+    }
+
     @Override
     public void periodic(){
         swerveOdometry.update(getYaw(), getModulePositions());  
@@ -115,5 +133,7 @@ public class Swerve extends SubsystemBase {
             SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Integrated", mod.getPosition().angle.getDegrees());
             SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Velocity", mod.getState().speedMetersPerSecond);    
         }
+        SmartDashboard.putNumberArray("ModuleStates", getAdvantageModuleStates());
+        SmartDashboard.putNumberArray("DesiredModuleStates", getAdvantageDesiredModuleStates());
     }
 }

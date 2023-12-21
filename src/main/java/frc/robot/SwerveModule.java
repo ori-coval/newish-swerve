@@ -28,6 +28,8 @@ public class SwerveModule {
     private TalonFX mDriveMotor;
     private CANcoder angleEncoder;
 
+    private SwerveModuleState desiredState = new SwerveModuleState(0, Rotation2d.fromDegrees(0));
+
     private final SimpleMotorFeedforward driveFeedForward = new SimpleMotorFeedforward(Constants.Swerve.driveKS, Constants.Swerve.driveKV, Constants.Swerve.driveKA);
 
     /* drive motor control requests */
@@ -62,6 +64,7 @@ public class SwerveModule {
         desiredState = CTREModuleState.optimize(desiredState, getState().angle);
         setAngle(desiredState);
         setSpeed(desiredState, isOpenLoop);
+        this.desiredState = desiredState;
     }
 
     private void setSpeed(SwerveModuleState desiredState, boolean isOpenLoop){
@@ -74,6 +77,7 @@ public class SwerveModule {
             driveVelocity.FeedForward = driveFeedForward.calculate(desiredState.speedMetersPerSecond);
             mDriveMotor.setControl(driveVelocity);
         }
+        this.desiredState = desiredState;
     }
     
 
@@ -85,6 +89,7 @@ public class SwerveModule {
         
         anglePosition.setReference(angle.getDegrees(), ControlType.kPosition);
         lastAngle = angle;
+        this.desiredState = desiredState;
     }
 
     private Rotation2d getAngle(){
@@ -136,6 +141,10 @@ public class SwerveModule {
             Conversions.talonToMPS(mDriveMotor.getVelocity().getValue(), Constants.Swerve.wheelCircumference, Constants.Swerve.driveGearRatio), 
             getAngle()
         ); 
+    }
+
+    public SwerveModuleState getDesierdState(){
+        return desiredState;
     }
 
     public SwerveModulePosition getPosition(){
