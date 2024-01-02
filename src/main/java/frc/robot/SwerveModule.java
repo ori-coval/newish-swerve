@@ -67,6 +67,15 @@ public class SwerveModule {
         this.desiredState = desiredState;
     }
 
+    public void scaledSetDesiredState(SwerveModuleState desiredState, boolean isOpenLoop) {
+                /* This is a custom optimize function, since default WPILib optimize assumes continuous controller which CTRE and Rev onboard is not */
+        desiredState = CTREModuleState.optimize(desiredState, getState().angle);
+        desiredState.speedMetersPerSecond = desiredState.angle.minus(getAngle()).getCos();
+        setAngle(desiredState);
+        setSpeed(desiredState, isOpenLoop);
+        this.desiredState = desiredState;
+    }
+
     private void setSpeed(SwerveModuleState desiredState, boolean isOpenLoop){
         if(isOpenLoop){
             driveDutyCycle.Output = desiredState.speedMetersPerSecond / Constants.Swerve.maxSpeed;
@@ -93,7 +102,7 @@ public class SwerveModule {
     }
 
     private Rotation2d getAngle(){
-        return Rotation2d.fromDegrees(Conversions.talonToDegrees(mAngleMotor.getEncoder().getPosition(), Constants.Swerve.angleGearRatio));
+        return Rotation2d.fromDegrees(mAngleMotor.getEncoder().getPosition());
     }
 
     public Rotation2d getCANcoder(){
@@ -106,7 +115,7 @@ public class SwerveModule {
     }
 
     public void resetToAbsolute(){
-        double absolutePosition = Conversions.degreesToTalon(waitForCANcoder().getDegrees() - angleOffset.getDegrees(), Constants.Swerve.angleGearRatio);
+        double absolutePosition = waitForCANcoder().getDegrees() - angleOffset.getDegrees();
         mAngleMotor.getEncoder().setPosition(absolutePosition);
     }
 
@@ -115,7 +124,7 @@ public class SwerveModule {
     }
 
     private void configAngleMotor(){
-        mAngleMotor.restoreFactoryDefaults();
+        //mAngleMotor.restoreFactoryDefaults();
         CANSparkMaxUtil.setCANSparkMaxBusUsage(mAngleMotor, Usage.kPositionOnly);
         mAngleMotor.setSmartCurrentLimit(Constants.Swerve.angleCurrentLimit);
         mAngleMotor.setInverted(Constants.Swerve.angleMotorInvert);

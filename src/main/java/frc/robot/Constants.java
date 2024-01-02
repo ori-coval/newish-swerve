@@ -40,8 +40,8 @@ public final class Constants {
         public static final double angleGearRatio = chosenModule.angleGearRatio;
 
         /* Motor Inverts */
-        public static final boolean angleMotorInvert = true;
-        public static final InvertedValue driveMotorInvert = chosenModule.driveMotorInvert;
+        public static final boolean angleMotorInvert = false;
+        public static final InvertedValue driveMotorInvert = InvertedValue.Clockwise_Positive;
 
         /* Angle Encoder Invert */
         public static final SensorDirectionValue cancoderInvert = chosenModule.cancoderInvert;
@@ -64,7 +64,7 @@ public final class Constants {
         public static final double voltageComp = 12;
 
         /* Angle Motor PID Values */
-        public static final double angleKP = chosenModule.angleKP;
+        public static final double angleKP = -0.01;//chosenModule.angleKP;
         public static final double angleKI = chosenModule.angleKI;
         public static final double angleKD = chosenModule.angleKD;
         public static final double angleKFF = chosenModule.angleKD;
