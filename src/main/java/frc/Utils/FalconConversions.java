@@ -1,6 +1,6 @@
-package frc.lib.math;
+package frc.Utils;
 
-public class Conversions {
+public class FalconConversions {
 
     /**
      * @param encoderRot Encoder Position: (in Rotations)

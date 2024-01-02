@@ -1,4 +1,4 @@
-package frc.robot;
+package frc.Utils.swerve;
 
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.VelocityVoltage;
@@ -14,10 +14,12 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.Timer;
-import frc.lib.math.Conversions;
-import frc.lib.util.CTREModuleState;
-import frc.lib.util.SwerveModuleConstants;
-import frc.robot.CANSparkMaxUtil.Usage;
+import frc.Utils.CANSparkMaxUtil;
+import frc.Utils.FalconConversions;
+import frc.Utils.CANSparkMaxUtil.Usage;
+import frc.robot.Constants;
+import frc.robot.Robot;
+import frc.robot.Constants.Swerve;
 
 public class SwerveModule {
     public int moduleNumber;
@@ -82,7 +84,7 @@ public class SwerveModule {
             mDriveMotor.setControl(driveDutyCycle);
         }
         else {
-            driveVelocity.Velocity = Conversions.MPSToTalon(desiredState.speedMetersPerSecond, Constants.Swerve.wheelCircumference, Constants.Swerve.driveGearRatio);
+            driveVelocity.Velocity = FalconConversions.MPSToTalon(desiredState.speedMetersPerSecond, Constants.Swerve.wheelCircumference, Constants.Swerve.driveGearRatio);
             driveVelocity.FeedForward = driveFeedForward.calculate(desiredState.speedMetersPerSecond);
             mDriveMotor.setControl(driveVelocity);
         }
@@ -147,7 +149,7 @@ public class SwerveModule {
 
     public SwerveModuleState getState(){
         return new SwerveModuleState(
-            Conversions.talonToMPS(mDriveMotor.getVelocity().getValue(), Constants.Swerve.wheelCircumference, Constants.Swerve.driveGearRatio), 
+            FalconConversions.talonToMPS(mDriveMotor.getVelocity().getValue(), Constants.Swerve.wheelCircumference, Constants.Swerve.driveGearRatio), 
             getAngle()
         ); 
     }
@@ -158,7 +160,7 @@ public class SwerveModule {
 
     public SwerveModulePosition getPosition(){
         return new SwerveModulePosition(
-            Conversions.talonToMeters(mDriveMotor.getPosition().getValue(), Constants.Swerve.wheelCircumference, Constants.Swerve.driveGearRatio), 
+            FalconConversions.talonToMeters(mDriveMotor.getPosition().getValue(), Constants.Swerve.wheelCircumference, Constants.Swerve.driveGearRatio), 
             getAngle()
         );
     }

@@ -5,12 +5,21 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
 import com.revrobotics.CANSparkMax.IdleMode;
 
-import frc.lib.util.SwerveModuleConstants;
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.apriltag.AprilTagFields;
+import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import frc.lib.util.COTSFalconSwerveConstants;
+import frc.Utils.swerve.COTSFalconSwerveConstants;
+import frc.Utils.swerve.SwerveModuleConstants;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.numbers.N1;
+import edu.wpi.first.math.numbers.N3;
 
 public final class Constants {
     public static final double stickDeadband = 0.1;
@@ -147,4 +156,27 @@ public final class Constants {
             new TrapezoidProfile.Constraints(
                 kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
     }
+
+    public static class Vision {
+    public static final String kRightCameraName = "YOUR CAMERA NAME";
+    public static final String kLeftCameraName = "YOUR CAMERA NAME";
+    // Cam mounted facing forward, half a meter forward of center, half a meter up
+    // from center.
+    public static final Transform3d kRightRobotToCam = new Transform3d(new Translation3d(0.5, 0.0, 0.5),
+        new Rotation3d(0, 0, 0));
+    public static final Transform3d kLeftRobotToCam = new Transform3d(new Translation3d(0.5, 0.0, 0.5),
+        new Rotation3d(0, 0, 0));
+
+    // The layout of the AprilTags on the field
+    public static final AprilTagFieldLayout kTagLayout = AprilTagFields.kDefaultField.loadAprilTagLayoutField(); 
+
+    // The standard deviations of our vision estimated poses, which affect
+    // correction rate
+    // (Fake values. Experiment and determine estimation noise on an actual robot.)
+    public static final Matrix<N3, N1> kRightSingleTagStdDevs = VecBuilder.fill(4, 4, 8);
+    public static final Matrix<N3, N1> kRightMultiTagStdDevs = VecBuilder.fill(0.5, 0.5, 1);
+
+    public static final Matrix<N3, N1> kLeftSingleTagStdDevs = VecBuilder.fill(4, 4, 8);
+    public static final Matrix<N3, N1> kLeftMultiTagStdDevs = VecBuilder.fill(0.5, 0.5, 1);
+  }
 }
