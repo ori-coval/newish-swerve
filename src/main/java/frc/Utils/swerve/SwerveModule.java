@@ -19,7 +19,6 @@ import frc.Utils.FalconConversions;
 import frc.Utils.CANSparkMaxUtil.Usage;
 import frc.robot.Constants;
 import frc.robot.Robot;
-import frc.robot.Constants.Swerve;
 
 public class SwerveModule {
     public int moduleNumber;
