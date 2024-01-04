@@ -29,13 +29,17 @@ import static frc.robot.Constants.Vision.*;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
+import frc.robot.subsystems.SwerveSubsystem;
+
 import java.util.Optional;
 import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.PhotonPoseEstimator.PoseStrategy;
+import org.photonvision.PhotonUtils;
 import org.photonvision.targeting.PhotonPipelineResult;
 
 public class Vision {
@@ -48,7 +52,8 @@ public class Vision {
     private static final PhotonCamera leftCamera = new PhotonCamera(kLeftCameraName);
     private static final PhotonPoseEstimator leftPhotonEstimator =
                 new PhotonPoseEstimator(
-                        kTagLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, leftCamera, kLeftRobotToCam);
+                    kTagLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, leftCamera, kLeftRobotToCam);
+
     public static double leftLastEstTimestamp = 0;
 
     public static PhotonPipelineResult getLatestResult() {
@@ -147,5 +152,15 @@ public class Vision {
             estStdDevs = estStdDevs.times(1 + (avgDist * avgDist / 30));
 
         return estStdDevs;
+    }
+
+    public static double DistanceFromTarget() {
+        return PhotonUtils.getDistanceToPose(SwerveSubsystem.getInstance().getPose(), target);
+
+    }
+
+    public static Rotation2d GetAngleFromTarget() {
+        return PhotonUtils.getYawToPose(SwerveSubsystem.getInstance().getPose(), target);
+
     }
 }
