@@ -1,7 +1,7 @@
 package frc.robot.subsystems;
 
-import frc.Utils.Vision;
 import frc.Utils.swerve.SwerveModule;
+import frc.Utils.vision.Vision;
 
 import static frc.robot.Constants.Swerve.*;
 
@@ -53,7 +53,7 @@ public class SwerveSubsystem extends SubsystemBase {
         swerveOdometry = new SwerveDriveOdometry(swerveKinematics, getYaw(), getModulePositions());
     }
 
-    public void drive(Translation2d translation, double rotation, boolean fieldRelative, boolean isOpenLoop) {
+    public void drive(Translation2d translation, double rotation, boolean fieldRelative, boolean isOpenLoop, boolean scaled) {
         SwerveModuleState[] swerveModuleStates = swerveKinematics.toSwerveModuleStates(
                 fieldRelative ? ChassisSpeeds.fromFieldRelativeSpeeds(
                         translation.getX(),
@@ -66,9 +66,17 @@ public class SwerveSubsystem extends SubsystemBase {
                                 rotation));
         SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, maxSpeed);
 
-        for (SwerveModule mod : mSwerveMods) {
+        if(scaled){
+            for (SwerveModule mod : mSwerveMods) {
             mod.setDesiredState(swerveModuleStates[mod.moduleNumber], isOpenLoop);
+            }
         }
+        else{
+            for (SwerveModule mod : mSwerveMods) {
+            mod.scaledSetDesiredState(swerveModuleStates[mod.moduleNumber], isOpenLoop);
+            }
+        }
+
     }
 
     /* Used by SwerveControllerCommand in Auto */
